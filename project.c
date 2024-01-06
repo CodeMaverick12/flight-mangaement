@@ -60,7 +60,7 @@ int main() {
         printf("2. Display Passengers on a Flight\n");
         printf("3. Display Food Menu\n");
         printf("4. Book a Flight\n");
-        printf("5.About\n");
+        printf("5. About\n");
         printf("6. Exit\n");
         printf("Enter your choice: ");
         scanf("%d", &choice);
@@ -93,11 +93,13 @@ int main() {
                 bookFlight(&airline, flightnumber, passengername, foodchoice, comfortlevel);
                 break;
             case 5:
-                printf("ABOUT MSAA AIRLINES :\n");
+                // About MSAA Airline
+                printf("ABOUT MSAA AIRLINE\n");
                 printf("\nFOUNDED: 2010\n");
-                printf("AWARDS: Best Domestic Airline Award 2016\n");
-                printf("MOTTO: Best people to fly with\n");
+                printf("AWARDS: Best Airline Award 2017\n");
+                printf("MOTTO: Best People To Fly With\n");
                 break;
+
             case 6:
                 // Exit the program
                 printf("Exiting Airline Management System. Goodbye!\n");
