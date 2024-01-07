@@ -38,9 +38,9 @@ int main() {
     struct airline airline = {
         .flightcount = 3,
         .flights = {
-            {"FL001", "New York", "Los Angeles", 50, 6},
-            {"FL002", "Chicago", "Miami", 30, 4},
-            {"FL003", "Seattle", "Denver", 20, 3},
+            {"FL001", "karachi", "Dehli", 50, 6},
+            {"FL002", "Quetta", "Mumbai", 30, 4},
+            {"FL003", "Lahore", "Peshawar", 20, 3},
         },
         .passengercount = 0,
     };
