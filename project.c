@@ -32,6 +32,11 @@ void infostore(void); // STORAGE
 int main() { // FIRST INTERFACE
 
     system("cls");
+    printf("\t\t*************************************************\n");
+    printf("\t\t*                                               *\n");
+    printf("\t\t*          AIRLINE MANAGEMENT SYSTEM            *\n");
+    printf("\t\t*                                               *\n");
+    printf("\t\t*************************************************\n\n");
     printf("1. TO BOOK A FLIGHT\n");
     printf("2. TO UPDATE FLIGHT\n");
     printf("3. TO CANCEL FLIGHT\n");
