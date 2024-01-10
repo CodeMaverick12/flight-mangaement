@@ -11,7 +11,7 @@ struct passenger {
     int seats;
     char origin[20];
     char destination[20];
-} passenger;
+} passenger, current;
 
 // Function declarations
 void flightBooking(void); // SECOND INTERFACE
@@ -32,18 +32,16 @@ void infostore(void); // STORAGE
 int main() { // FIRST INTERFACE
 
     system("cls");
-    printf("\t\t*************************************************\n");
-    printf("\t\t*                                               *\n");
-    printf("\t\t*          AIRLINE MANAGEMENT SYSTEM            *\n");
-    printf("\t\t*                                               *\n");
-    printf("\t\t*************************************************\n\n");
-    printf("1. TO BOOK A FLIGHT\n");
-    printf("2. TO UPDATE FLIGHT\n");
-    printf("3. TO CANCEL FLIGHT\n");
-    printf("4. TO EXIT\n\n");
+    printf("\t\t*******************************************\n");
+    printf("\t\t*        AIRLINE MANAGEMENT SYSTEM        *\n");
+    printf("\t\t*******************************************\n\n");
+    printf("\t1. TO BOOK A FLIGHT\n");
+    printf("\t2. TO UPDATE FLIGHT\n");
+    printf("\t3. TO CANCEL FLIGHT\n");
+    printf("\t4. TO EXIT\n\n");
 
     int choice;
-    printf("ENTER YOUR CHOICE: ");
+    printf("\tENTER YOUR CHOICE: ");
     scanf("%d", &choice);
     switch (choice) {
         case 1:
@@ -60,13 +58,13 @@ int main() { // FIRST INTERFACE
 
         case 4:
             system("cls");
-            printf("Thank You!");
-            sleep(2);
+            printf("\n\t\tThank You!");
+            getch();
             exit(0);
             break;
 
         default:
-            printf("INVALID CHOICE");
+            printf("\tINVALID CHOICE");
             getch();
             main();
             break;
@@ -96,7 +94,7 @@ void flightBooking(void) // SECOND INTERFACE
 
         default:
             printf("INVALID CHOICE");
-            sleep(2);
+            getch();
             goto flightBooking;
             break;
     }
@@ -119,6 +117,11 @@ void nationalFlight(void) // THIRD INTERFACE
     scanf("%s %s", passenger.origin, passenger.destination);
 
     if (cityverification(1) == 0) {
+        printf("\nINVALID CITY NAME\n");
+        getch();
+        for (int i = 0; i < 4; ++i) {
+            printf("\e[A\e[2K");
+        }
         goto choice;
     }
 
@@ -141,6 +144,11 @@ void internationalFlight(void) // THIRD INTERFACE
     scanf("%s %s", passenger.origin, passenger.destination);
 
     if (cityverification(2) == 0) {
+        printf("\nINVALID CITY NAME\n");
+        getch();
+        for (int i = 0; i < 4; ++i) {
+            printf("\e[A\e[2K");
+        }
         goto choice;
     }
 
@@ -160,8 +168,17 @@ void printcities(int choice)
     }
 
     if (fptr == NULL) {
-        perror("Error opening file");
-        exit(1);
+        if (choice == 1) {
+        fptr = fopen("nationalCities.txt", "w");
+        fprintf(fptr,"KARACHI\nLAHORE\nISLAMABAD\nPESHAWAR\nQUETTA\nHYDERABAD\nSKARDU\nFAISALBAD\nMULTAN\nSAILKOT");
+        fclose(fptr);
+        fptr = fopen("nationalCities.txt", "r");
+        } else {
+        fptr = fopen("internationalCities.txt", "w");
+        fprintf(fptr,"DUBAI\nMAKKAH\nRIYYAD\nQATAR\nKABUL\nSOUL\nMADDINAH\nLONDON\nTOKYO\nBERLIN\nKARACHI\nLAHORE\nISLAMABAD\nPESHAWAR\nQUETTA\nHYDERABAD\nSKARDU\nFAISALBAD\nMULTAN\nSAILKOT");
+        fclose(fptr);
+        fptr = fopen("internationalCities.txt", "r");
+        }
     }
 
     while (fscanf(fptr, "%s", cityname) != EOF) {
@@ -217,8 +234,10 @@ int passengerID(void)
     fptr = fopen("passengerID.txt", "r");
 
     if (fptr == NULL) {
-        perror("Error opening file");
-        exit(1);
+        fptr = fopen("passengerID.txt", "w");
+        fprintf(fptr,"%d", 100);
+        fclose(fptr);
+        fptr = fopen("passengerID.txt", "r");
     }
 
     fscanf(fptr, "%d", &id);
@@ -280,12 +299,6 @@ void flightReview(void) // SECOND INTERFACE
 void updateSeats(int id)
 {
     FILE *fptr;
-    int currentId;
-    char currentName[50];
-    int seats;
-    char origin[20];
-    char destination[20];
-
     fptr = fopen("infostore.txt", "r");
 
     if (fptr == NULL) {
@@ -300,12 +313,12 @@ void updateSeats(int id)
         exit(1);
     }
 
-    while (fscanf(fptr, "%d %s %d %s %s", &currentId, currentName, &seats, origin, destination) != EOF) {
-        if (currentId == id) {
+    while (fscanf(fptr, "%d %s %d %s %s", &current.id, current.name, &current.seats, current.origin, current.destination) != EOF) {
+        if (current.id == id) {
             printf("\nEnter the new number of seats: ");
-            scanf("%d", &seats);
+            scanf("%d", &current.seats);
         }
-        fprintf(tempFile, "%d %s %d %s %s\n", currentId, currentName, seats, origin, destination);
+        fprintf(tempFile, "%d %s %d %s %s\n", current.id, current.name, current.seats, current.origin, current.destination);
     }
 
     fclose(fptr);
@@ -320,12 +333,6 @@ void updateSeats(int id)
 void updateOriginDestination(int id)
 {
     FILE *fptr;
-    int currentId;
-    char currentName[50];
-    int seats;
-    char origin[20];
-    char destination[20];
-
     fptr = fopen("infostore.txt", "r");
 
     if (fptr == NULL) {
@@ -340,14 +347,24 @@ void updateOriginDestination(int id)
         exit(1);
     }
 
-    while (fscanf(fptr, "%d %s %d %s %s", &currentId, currentName, &seats, origin, destination) != EOF) {
-        if (currentId == id) {
+    while (fscanf(fptr, "%d %s %d %s %s", &current.id, current.name, &current.seats, current.origin, current.destination) != EOF) {
+        if (current.id == id) {
+            printcities(2);
+            repeat:
             printf("\nEnter the new origin: ");
-            scanf("%s", origin);
+            scanf("%s", passenger.origin);
             printf("Enter the new destination: ");
-            scanf("%s", destination);
+            scanf("%s", passenger.destination);
+            if(cityverification(2) == 0){
+                printf("INVALID CITY NAME\n");
+                getch();
+                for (int i = 0; i < 4; ++i) {
+                    printf("\e[A\e[2K");
+                }
+                goto repeat;
+            }
         }
-        fprintf(tempFile, "%d %s %d %s %s\n", currentId, currentName, seats, origin, destination);
+        fprintf(tempFile, "%d %s %d %s %s\n", current.id, current.name, current.seats, current.origin, current.destination);
     }
 
     fclose(fptr);
@@ -394,12 +411,6 @@ void flightCancel(void) // SECOND INTERFACE
 void deletePassenger(int id)
 {
     FILE *fptr;
-    int currentId;
-    char currentName[50];
-    int seats;
-    char origin[20];
-    char destination[20];
-
     fptr = fopen("infostore.txt", "r");
 
     if (fptr == NULL) {
@@ -414,11 +425,11 @@ void deletePassenger(int id)
         exit(1);
     }
 
-    while (fscanf(fptr, "%d %s %d %s %s", &currentId, currentName, &seats, origin, destination) != EOF) {
-        if (currentId == id) {
+    while (fscanf(fptr, "%d %s %d %s %s", &current.id, current.name, &current.seats, current.origin, current.destination) != EOF) {
+        if (current.id == id) {
             continue;
         }
-        fprintf(tempFile, "%d %s %d %s %s\n", currentId, currentName, seats, origin, destination);
+        fprintf(tempFile, "%d %s %d %s %s\n", current.id, current.name, current.seats, current.origin, current.destination);
     }
 
     fclose(fptr);
@@ -434,12 +445,6 @@ void deletePassenger(int id)
 int passengerVerification(int id, const char name[]) // VERIFIACTION
 {
     FILE *fptr;
-    int currentId;
-    char currentName[50];
-    int seats;
-    char origin[20];
-    char destination[20];
-
     fptr = fopen("infostore.txt", "r");
 
     if (fptr == NULL) {
@@ -447,13 +452,13 @@ int passengerVerification(int id, const char name[]) // VERIFIACTION
         exit(1);
     }
 
-    while (fscanf(fptr, "%d %s %d %s %s", &currentId, currentName, &seats, origin, destination) != EOF) {
-        if (currentId == id && strcmp(currentName, name) == 0) {
+    while (fscanf(fptr, "%d %s %d %s %s", &current.id, current.name, &current.seats, current.origin, current.destination) != EOF) {
+        if (current.id == id && strcmp(current.name, name) == 0) {
             printf("\nPassenger Found\n");
             printf("Your current information:\n");
-            printf("Seats = %d\n", seats);
-            printf("Origin = %s\n", origin);
-            printf("Destination = %s\n", destination);
+            printf("Seats = %d\n", current.seats);
+            printf("Origin = %s\n", current.origin);
+            printf("Destination = %s\n", current.destination);
             fclose(fptr);
             return 1; // Passenger found
         }
